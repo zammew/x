@@ -62,7 +62,7 @@ encrypt() {
     return 1  # or exit 1 if you want to stop the script entirely
   fi
 
-    echo "$password" | openssl enc -aes-256-cbc -salt -pass stdin -in "$input" -out "$output" -pass stdin
+    echo "$password" | openssl enc -aes-256-cbc -nosalt -pass stdin -in "$input" -out "$output" -pass stdin
   # Use PASSWORD environment variable if it exists, otherwise prompt for password
  
   echo "Encrypted to: $output"
@@ -203,7 +203,7 @@ encryptrmwname() {
   
   # Encrypt the filename using base64
   local encrypted_name=""
-  encrypted_name=$(echo -n "$basename" | openssl enc -aes-256-cbc -a -salt -pass pass:"$password" 2>/dev/null | tr -d '\n')
+  encrypted_name=$(echo -n "$basename" | openssl enc -aes-256-cbc -a -nosalt -pass pass:"$password" 2>/dev/null | tr -d '\n')
   
   # Check if filename encryption succeeded
   if [[ -z "$encrypted_name" ]]; then
@@ -217,9 +217,9 @@ encryptrmwname() {
   # Encrypt the file content
   local encrypt_status=0
   if [[ -n "$password" ]]; then
-    echo "$password" | openssl enc -aes-256-cbc -salt -pass stdin -in "$input" -out "$output" 2>/dev/null || encrypt_status=$?
+    echo "$password" | openssl enc -aes-256-cbc -nosalt -pass stdin -in "$input" -out "$output" 2>/dev/null || encrypt_status=$?
   else
-    openssl enc -aes-256-cbc -salt -in "$input" -out "$output" 2>/dev/null || encrypt_status=$?
+    openssl enc -aes-256-cbc -nosalt -in "$input" -out "$output" 2>/dev/null || encrypt_status=$?
   fi
   
   # Check if encryption succeeded
@@ -265,7 +265,7 @@ decryptrmwname() {
   
   # Decrypt the filename
   local decrypted_name=""
-  decrypted_name=$(echo -n "$filename" | openssl enc -aes-256-cbc -a -d -salt -pass pass:"$password" 2>/dev/null)
+  decrypted_name=$(echo -n "$filename" | openssl enc -aes-256-cbc -a -d -nosalt -pass pass:"$password" 2>/dev/null)
   local filename_status=$?
   
   # Check if filename decryption succeeded
@@ -474,7 +474,7 @@ encrypt_file() {
   local password="$3"
   
   # Use OpenSSL to encrypt the file with AES-256-CBC
-  openssl enc -aes-256-cbc -salt -in "$input_file" -out "$output_file" -pass "pass:$password" 2>/dev/null
+  openssl enc -aes-256-cbc -nosalt -in "$input_file" -out "$output_file" -pass "pass:$password" 2>/dev/null
   return $?
 }
 
