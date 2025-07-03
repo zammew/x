@@ -464,6 +464,19 @@ decryptdir(){
   echo "Decryption complete: $success_count files successfully decrypted, $fail_count files failed"
 }
 
+# enc using openssl aes 256 cbc no salt, stdin pass 
+encbase(){
+  local input_file="$1"
+  local output_file="$2"
+  openssl enc -aes-256-cbc -nosalt -pass stdin -in "$input_file" -out "$output_file"
+}
+# dec using openssl aes 256 cbc no salt, stdin pass
+decbase(){
+  local input_file="$1"
+  local output_file="$2"
+  openssl enc -d -aes-256-cbc -nosalt -pass stdin -in "$input_file" -out "$output_file"
+}
+
 
 
 # Function to encrypt a file using OpenSSL
@@ -690,8 +703,8 @@ enc(){
 
 # final dec
 dec(){
-  decryptfilenameinfolder
   decryptdir
+  decryptfilenameinfolder
 }
 
 "$@"
