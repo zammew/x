@@ -200,6 +200,13 @@ decnamedelinput(){
   # Decrypt the filename
   local decrypted_filename=$(echo -n "$encrypted_filename_no_ext" | xxd -r -p | openssl enc -d -aes-256-cbc -nosalt -pass "pass:$password")
   
+  #check that the decrypted filename is not malformed, else exit
+if ! [[ "$decrypted_filename" =~ ^[[:print:]]*$ ]]; then
+  echo "Decrypted filename contains invalid characters, exiting.."
+  exit 1
+fi
+
+
   # Construct the new output filename
   local new_output_filename="$dir/${decrypted_filename}"
   
