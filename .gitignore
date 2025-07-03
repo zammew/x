@@ -3,5 +3,10 @@
 *.tsx
 *.json
 *.keykey
+*.cjs
+*.bash
+*.astro
 .history
 assets
+.astro
+node_modules
