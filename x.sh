@@ -263,50 +263,52 @@ loopjs() {
     "$cmder" "$file"
   done
 }
+
+# except hidden folder and node_modules
 loopall() {
   ask_password
   local cmder="$1"
- find . -type f -name "*.mp4"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.mp4"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.js"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.js"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.jsx"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.jsx"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.ts"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.ts"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.tsx"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.tsx"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.json"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.json"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.md"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.md"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.png"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.png"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.jpg"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.jpg"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.cjs"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.cjs"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.astro"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.astro"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
- find . -type f -name "*.bash"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+ find . -type f -name "*.bash"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
 }
 looprenameenc() {
   ask_password
   local cmder="$1"
-  find . -type f -name "*.renameenc"  -not -path "*/.*/*" -print0 | while IFS= read -r -d '' file; do
+  find . -type f -name "*.renameenc"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
     "$cmder" "$file"
   done
 }
