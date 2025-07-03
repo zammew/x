@@ -2,3 +2,5 @@
 *.ts
 *.tsx
 *.json
+.history
+assets
