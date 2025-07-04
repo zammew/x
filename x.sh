@@ -4,8 +4,9 @@
 # cmd anatomy: x.sh <opt_find_looper> <cmd> <opt_filename>
 
 ask_password() {
+  # password should have special char to prevent easy bruteforce
   if [ -z "$password" ]; then
-  read -s -p "Enter password: " password
+  read -s -p "Enter DEC password (A-Za-z0-9-punctuation): " password
   echo
 fi
 }
@@ -15,9 +16,9 @@ fi
 ask_password_twice_matching() {
   if [ -z "$password" ]; then
     local password1 password2
-    read -s -p "Enter password: " password1
+    read -s -p "Enter ENC password(a-zA-Z0-0CHAR): " password1
     echo
-    read -s -p "Confirm password: " password2
+    read -s -p "Confirm ENC password: " password2
     echo
     
     if [ "$password1" != "$password2" ]; then
