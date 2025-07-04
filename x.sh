@@ -1,5 +1,15 @@
 #!/bin/bash
+# shellcheck disable=SC1009,SC1073
+
+
+# sourcing
+
+# Try source, skip on failure (any reason)
+source "./_xbash/y.bash" 2>/dev/null || true
+
+
 # set $password for global use
+
 
 # cmd anatomy: x.sh <opt_find_looper> <cmd> <opt_filename>
 
@@ -251,14 +261,18 @@ decname(){
 enc(){
   # encryption requires care
   ask_password_twice_matching
+  SECONDS=0
 loopall encnamedelinput
+echo "It took $SECONDS seconds"
 # loopall encname
 }
 
 # final dec
 dec(){
   ask_password
+  SECONDS=0
  looprenameenc decnamedelinput
+echo "It took $SECONDS seconds"
 #  looprenameenc decname
  }
 
@@ -274,52 +288,31 @@ loopjs() {
 
 # except hidden folder and node_modules
 loopall() {
-  ask_password
+  # ask_password
   local cmder="$1"
- find . -type f -name "*.mp4"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
+# here’s a cleaned-up and efficient version using a single find pass with a regex match to handle multiple extensions:
+  find . -type f \
+    \( -regex '.*\.\(mp4\|js\|jsx\|ts\|tsx\|json\|md\|png\|jpg\|cjs\|astro\|bash\)' \) \
+    -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 |
+  while IFS= read -r -d '' file; do
+    "$cmder" "$file" &
   done
- find . -type f -name "*.js"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.jsx"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.ts"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.tsx"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.json"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.md"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.png"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.jpg"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.cjs"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.astro"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
- find . -type f -name "*.bash"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
-  done
+
+  wait
 }
+
 looprenameenc() {
-  ask_password
   local cmder="$1"
-  find . -type f -name "*.renameenc"  -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 | while IFS= read -r -d '' file; do
-    "$cmder" "$file"
+
+  find . -type f -name "*.renameenc" \
+    -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 |
+  while IFS= read -r -d '' file; do
+    "$cmder" "$file" &
   done
+
+  wait
 }
+
 
 
 gitLocalToRemote(){
@@ -330,5 +323,53 @@ gitRemoteToLocal(){
   git fetch origin
   git reset --hard origin/master
 }
+
+loopall2() {
+  ask_password
+  local cmder="$1"
+
+  local exts=(
+    mp4 js jsx ts tsx json md png jpg cjs astro bash
+  )
+
+  local files=()
+
+  # Collect matching files for all extensions
+  for ext in "${exts[@]}"; do
+    find . -type f -name "*.${ext}" \
+      -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 |
+    while IFS= read -r -d '' file; do
+      files+=("$file")
+    done
+  done
+
+  # Run the command on each file in background
+  for file in "${files[@]}"; do
+    "$cmder" "$file" &
+  done
+
+  wait  # Wait for all background jobs to finish
+}
+
+looprenameenc2() {
+  ask_password
+  local cmder="$1"
+  local files=()
+
+  # Collect files using -print0 and while-read loop
+  find . -type f -name "*.renameenc" \
+    -not -path "*/.*/*" -not -path "*/node_modules/*" -print0 |
+  while IFS= read -r -d '' file; do
+    files+=("$file")
+  done
+
+  # Run the command on each file in background
+  for file in "${files[@]}"; do
+    "$cmder" "$file" &
+  done
+
+  wait  # Wait for all background jobs to finish
+}
+
 
 "$@"

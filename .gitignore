@@ -11,3 +11,4 @@
 assets
 .astro
 node_modules
+pnpm-lock.yaml
