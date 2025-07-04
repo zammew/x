@@ -322,4 +322,13 @@ looprenameenc() {
 }
 
 
+gitLocalToRemote(){
+  git push --force
+}
+
+gitRemoteToLocal(){
+  git fetch origin
+  git reset --hard origin/master
+}
+
 "$@"
